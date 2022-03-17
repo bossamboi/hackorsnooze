@@ -62,7 +62,7 @@ async function storySubmit(evt) {
 
   console.log({ title, author, url });
 
-  storyList.addStory(currentUser, { title, author, url });
+  await storyList.addStory(currentUser, { title, author, url });
 }
 
 $submitForm.on("submit", storySubmit);

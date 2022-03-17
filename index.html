@@ -37,12 +37,32 @@
   <div class="navbar-brand">
     <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
   </div>
+
+  <div class="nav-left">
+    <a clase="nav-link" id="nav-submit" href="#">Submit</a>
+    <a class="nav-link" id="nav-favorites" href="#">Favorites</a>
+    <a class="nav-link" id="nav-my-stories" href="#">My Stories</a>
+  </div>
+
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
     <a class="hidden" id="nav-logout" href="#"><small>(logout)</small></a>
   </div>
 </nav>
+
+<form class="submit-data" action="submit">
+  <div id="author">author
+    <input type="text" placeholder="Author Name">
+  </div>
+  <div id="title">title
+    <input type="text" placeholder="Story title">
+  </div>
+  <div id="url">url
+    <input type="text" placeholder="Story URL">
+  </div>
+  <button id="submit-data-button" type="submit">Submit</button>
+</form>
 
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">
@@ -60,7 +80,7 @@
 
   <!-- Login form -->
   <form id="login-form" class="account-form hidden">
-    <h4>Login</h4>
+    <h4>Login</h4>  
     <div class="login-input">
       <label for="login-username">username</label>
       <input id="login-username" autocomplete="current-username">
@@ -91,6 +111,9 @@
     <button type="submit">create account</button>
   </form>
 </section>
+
+
+
 
 <!-- Library JS & our JS -->
 <script src="https://unpkg.com/jquery"></script>

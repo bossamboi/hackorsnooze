@@ -85,8 +85,8 @@ class StoryList {
         },
       },
     });
-
-    return new Story({ storyId, title, author });
+    let storyResponse = response.story
+    return new Story({ storyResponse });
   }
 }
 

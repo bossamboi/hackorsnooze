@@ -51,6 +51,8 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
+/** DOCSTRING NEEDED */
+
 async function storySubmit(evt) {
   console.debug("storySubmit", evt);
   evt.preventDefault();
@@ -59,13 +61,17 @@ async function storySubmit(evt) {
   const title = $("#title").val();
   const url = $("#url").val();
 
+  const newStory = await storyList.addStory(currentUser, { title, author, url });
+  console.log("newStory=", newStory);
+  const newStoryMarkup = generateStoryMarkup(newStory);
+  $allStoriesList.prepend(newStoryMarkup);
+  // DOM.prepend new Story markup
 
-  console.log({ title, author, url });
+  // hide the form jQuery
+  $submitForm.hide();
 
-  await storyList.addStory(currentUser, { title, author, url });
-  await getAndShowStoriesOnStart();
-  hidePageComponents();
-  putStoriesOnPage();
+  //research form reset - possible jquery method for forms
+
   $("#author").val("");
   $("#title").val("");
   $("#url").val("");

@@ -87,7 +87,11 @@ class StoryList {
     });
     console.log(response);
     let storyResponse = response.data.story;
-    return new Story(storyResponse);
+
+    let newStory = new Story(storyResponse);
+
+    this.stories.unshift(newStory);
+    return newStory;
   }
 }
 

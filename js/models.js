@@ -65,7 +65,7 @@ class StoryList {
   }
 
   /** Adds story data to API, makes a Story instance, adds it to story list.
-   * - user - the current instance of User who will post the story
+   * - currentUser
    * - obj of {title, author, url}
    *
    * Returns the new Story instance
@@ -85,8 +85,9 @@ class StoryList {
         },
       },
     });
-    let storyResponse = response.story
-    return new Story({ storyResponse });
+    console.log(response);
+    let storyResponse = response.data.story;
+    return new Story(storyResponse);
   }
 }
 

@@ -40,9 +40,9 @@ function updateNavOnLogin() {
 /** Show submit form on click on "submit" */
 
 function navSubmitClick(evt) {
+  evt.preventDefault();
   console.log("navSubmit works");
   console.debug("navSubmitClick", evt);
-  evt.preventDefault();
   $submitForm.show();
 }
 // const $navSubmit = $("#nav-submit");

@@ -148,30 +148,31 @@ class User {
 
   /** add story to in memory favorites and update API favorites */
 
-  async addFavorite(story) {
+  async addFavorite(storyId) {
     // update in-memory favorites array with story
-    this.favorites.push(story);
-
+    
     // update the API with favorite story
-
+    console.log("adding Favorites to api and currentUser")
     const response = await axios({
-      url: `${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
+      url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
       method: "POST",
       data: { token: currentUser.loginToken },
     });
-    console.log("addfav response=", response);
+    const responseStoryObj = response.data.user.favorites[response.data.user.favorites.length -1];
+    currentUser.favorites.push(responseStoryObj)
   }
 
-  async removeFavorite(story) {
+  async removeFavorite(storyId) {
     // update in-memory favorites array - remove specified story
     // delete this.favorites[story.storyId];
 
-    console.log(story);
+    console.log(storyId);
 
     // FIX: THIS FUNCTION IS MESSED UP. HOW TO DELETE FAVORITE FROM IN MEMORY FAVORITES
+    //UPDATE: we realized that variable is in a string due to pulling it from the html.
 
     for (let i = 0; i < currentUser.favorites.length; i++) {
-      if (currentUser.favorites[i].storyId === story.storyId) {
+      if (currentUser.favorites[i].storyId === storyId) {
         currentUser.favorites = currentUser.favorites
           .slice(0, i)
           .concat(currentUser.favorites.slice(i + 1));
@@ -181,7 +182,7 @@ class User {
     // update the API with favorite story
 
     const response = await axios({
-      url: `${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
+      url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
       method: "DELETE",
       data: { token: currentUser.loginToken },
     });

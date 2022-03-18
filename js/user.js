@@ -113,4 +113,39 @@ function updateUIOnUserLogin() {
   $allStoriesList.show();
 
   updateNavOnLogin();
+  populateStars()
 }
+
+function populateStars(){
+  let $unFilledStar = $("<i></i>")
+  $unFilledStar.addClass("far fa-star");
+  const $filledStar = $(`<i class="fas fa-star"></i>`);
+  const $listOfNews = $("ol li")
+  .prepend($unFilledStar);
+}
+
+
+/**if the star is unfavorited, change star to solid and add story to favorites
+ * if the star is favorited, change the star to outlined and remove from favorites
+ */
+async function handleStarClick (evt){
+  let $starElement = $(evt.target)
+  let $currentStoryId = $starElement.closest("li").attr("id")
+  if($starElement.hasClass("far")){
+   $starElement
+   .removeClass("far") 
+   .addClass("fas");
+   await currentUser.addFavorite($currentStoryId);
+  } else {
+    $starElement
+    .removeClass("fas")
+    .addClass("far")
+    await currentUser.removeFavorite($currentStoryId);
+  }
+}
+
+
+$("ol").on("click", ".fa-star", handleStarClick)
+
+//<i class="far fa-star"></i> empty
+//<i class="fas fa-star"></i> filled

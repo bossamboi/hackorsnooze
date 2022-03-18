@@ -43,7 +43,20 @@ function navSubmitClick(evt) {
   evt.preventDefault();
   console.log("navSubmit works");
   console.debug("navSubmitClick", evt);
+  hidePageComponents();
+  $allStoriesList.show();
   $submitForm.show();
 }
 // const $navSubmit = $("#nav-submit");
 $navSubmit.on("click", navSubmitClick);
+
+/** show favorited stories on click of Favorites */
+function navFavClick(evt) {
+  evt.preventDefault();
+  console.log("navFavClicked");
+  hidePageComponents();
+  putFavoritesOnHTML();
+  $favStoriesList.show();
+}
+
+$navFavs.on("click", navFavClick);

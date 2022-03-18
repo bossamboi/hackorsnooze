@@ -23,8 +23,9 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    let domain = new URL(this.url);
+    domain = domain.hostname;
+    return domain;
   }
 }
 
@@ -72,7 +73,6 @@ class StoryList {
    */
 
   async addStory(currentUser, { title, author, url }) {
-    // UNIMPLEMENTED: complete this function!
     const response = await axios({
       url: `${BASE_URL}/stories`,
       method: "POST",
@@ -150,16 +150,29 @@ class User {
 
   async addFavorite(storyId) {
     // update in-memory favorites array with story
-    
+
     // update the API with favorite story
-    console.log("adding Favorites to api and currentUser")
+    console.log("adding Favorites to api and currentUser");
     const response = await axios({
       url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
       method: "POST",
       data: { token: currentUser.loginToken },
     });
-    const responseStoryObj = response.data.user.favorites[response.data.user.favorites.length -1];
-    currentUser.favorites.push(responseStoryObj)
+
+    // gets story that was just added to API favorites
+    const responseStoryObj = response.data.user.favorites[response.data.user.favorites.length - 1];
+
+    const addedFavStory = storyList.stories.filter(function (s) {
+      return s.storyId === storyId;
+    });
+
+    // update in memory favorites
+    for (let favorite of currentUser.favorites) {
+      if (favorite.storyId === addedFavStory[0].storyId) {
+        return;
+      }
+    }
+    currentUser.favorites.push(addedFavStory[0]);
   }
 
   async removeFavorite(storyId) {
@@ -168,19 +181,12 @@ class User {
 
     console.log(storyId);
 
-    // FIX: THIS FUNCTION IS MESSED UP. HOW TO DELETE FAVORITE FROM IN MEMORY FAVORITES
-    //UPDATE: we realized that variable is in a string due to pulling it from the html.
+    // filter user favorites for stories that do not match the storyId of the story we remove
+    currentUser.favorites = currentUser.favorites.filter(function (s) {
+      return s.storyId !== storyId;
+    });
 
-    for (let i = 0; i < currentUser.favorites.length; i++) {
-      if (currentUser.favorites[i].storyId === storyId) {
-        currentUser.favorites = currentUser.favorites
-          .slice(0, i)
-          .concat(currentUser.favorites.slice(i + 1));
-      }
-    }
-
-    // update the API with favorite story
-
+    // update the API with removed favorite story
     const response = await axios({
       url: `${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`,
       method: "DELETE",

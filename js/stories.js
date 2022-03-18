@@ -22,9 +22,19 @@ async function getAndShowStoriesOnStart() {
 function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
+  let starStyle = "";
+
+  if (currentUser) {
+    const isFavorite = currentUser.favorites.some(function (favorite) {
+      return favorite.storyId === story.storyId;
+    });
+    starStyle = isFavorite ? "fas fa-star" : "far fa-star";
+  }
+
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
+      <i class = "${starStyle}"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -33,6 +43,19 @@ function generateStoryMarkup(story) {
         <small class="story-user">posted by ${story.username}</small>
       </li>
     `);
+}
+
+function putFavoritesOnHTML() {
+  $favStoriesList.empty();
+
+  for (let story of currentUser.favorites) {
+    const $story = generateStoryMarkup(story);
+    $favStoriesList.append($story);
+  }
+
+  if (currentUser.favorites.length === 0) {
+    $favStoriesList.text("You haven't favorited anything yet!");
+  }
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -51,7 +74,7 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
-/** DOCSTRING NEEDED */
+/** Takes values from new story form and adds story to API and DOM */
 
 async function storySubmit(evt) {
   console.debug("storySubmit", evt);
@@ -78,3 +101,20 @@ async function storySubmit(evt) {
 }
 
 $submitForm.on("submit", storySubmit);
+
+/**if the star is unfavorited, change star to solid and add story to favorites
+ * if the star is favorited, change the star to outlined and remove from favorites
+ */
+async function handleStarClick(evt) {
+  let $starElement = $(evt.target);
+  let $currentStoryId = $starElement.closest("li").attr("id");
+  if ($starElement.hasClass("far")) {
+    await currentUser.addFavorite($currentStoryId);
+  } else {
+    await currentUser.removeFavorite($currentStoryId);
+  }
+  $starElement.toggleClass("fas far");
+}
+
+$("ol").on("click", ".fa-star", handleStarClick);
+$("ul").on("click", ".fa-star", handleStarClick);

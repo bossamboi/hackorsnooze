@@ -146,6 +146,48 @@ class User {
     );
   }
 
+  /** add story to in memory favorites and update API favorites */
+
+  async addFavorite(story) {
+    // update in-memory favorites array with story
+    this.favorites.push(story);
+
+    // update the API with favorite story
+
+    const response = await axios({
+      url: `${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
+      method: "POST",
+      data: { token: currentUser.loginToken },
+    });
+    console.log("addfav response=", response);
+  }
+
+  async removeFavorite(story) {
+    // update in-memory favorites array - remove specified story
+    // delete this.favorites[story.storyId];
+
+    console.log(story);
+
+    // FIX: THIS FUNCTION IS MESSED UP. HOW TO DELETE FAVORITE FROM IN MEMORY FAVORITES
+
+    for (let i = 0; i < currentUser.favorites.length; i++) {
+      if (currentUser.favorites[i].storyId === story.storyId) {
+        currentUser.favorites = currentUser.favorites
+          .slice(0, i)
+          .concat(currentUser.favorites.slice(i + 1));
+      }
+    }
+
+    // update the API with favorite story
+
+    const response = await axios({
+      url: `${BASE_URL}/users/${currentUser.username}/favorites/${story.storyId}`,
+      method: "DELETE",
+      data: { token: currentUser.loginToken },
+    });
+    console.log("removeFav response=", response);
+  }
+
   /** Login in user with API, make User instance & return it.
 
    * - username: an existing user's username

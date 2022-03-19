@@ -105,7 +105,10 @@ class User {
    *   - token
    */
 
-  constructor({ username, name, createdAt, favorites = [], ownStories = [] }, token) {
+  constructor(
+    { username, name, createdAt, favorites = [], ownStories = [] },
+    token
+  ) {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
@@ -160,7 +163,8 @@ class User {
     });
 
     // gets story that was just added to API favorites
-    const responseStoryObj = response.data.user.favorites[response.data.user.favorites.length - 1];
+    const responseStoryObj =
+      response.data.user.favorites[response.data.user.favorites.length - 1];
 
     const addedFavStory = storyList.stories.filter(function (s) {
       return s.storyId === storyId;
